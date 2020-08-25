@@ -2,7 +2,7 @@
 An automation of the cli based installation steps for the kholia / OSX-KVM project. This is installer just calls each of the cli commands listed. All the credit for cli based applications being called goes to kholia.
 
 # Running the script
-In order to run this you will need to have dcli installed.Do so with these commands.  <br>
+In order to run this you will need to have dcli installed. Do so with these commands.  <br>
 wget https://raw.githubusercontent.com/bsutton/dcli/master/bin/linux/dcli_install <br>
 chmod +x dcli_install <br>
 ./dcli_install <br>
