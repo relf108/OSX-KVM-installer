@@ -8,8 +8,8 @@ void main(List<String> args) {
   InstallationPreparation.cloneOSXKVM();
   InstallationPreparation.fetchInstaller();
   InstallationPreparation.convertToIMG();
-  var size =
-      ask('Enter size of install in GB (default 64)', defaultValue: '64', validator: Ask.integer);
+  var size = ask('Enter size of install in GB (default 64)',
+      defaultValue: '64', validator: Ask.integer);
   while (!checkSize(size)) {
     size = ask('Enter size of install in GB (default 64)', defaultValue: '64');
   }
