@@ -1,7 +1,7 @@
 #! /usr/bin/env dcli
 
 import 'package:dcli/dcli.dart';
-import './installationPreparation.dart';
+import 'package:osx_kvm_installer/osx_kvm_installer.dart';
 
 void main(List<String> args) {
   InstallationPreparation.installDependencies();

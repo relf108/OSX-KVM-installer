@@ -2,6 +2,15 @@
 As it stands this installer only works on debian based linux distributions (Ubuntu, POP_OS, etc).<br>
 This is purely because it installs dependencies with apt. If you would like to use the installer with some other package manager raise an issue and I'll implement it.
 
+# Running 
+```bash
+wget https://github.com/relf108/OSX-KVM-installer/releases/download/v1.1/installer
+chmod +x installer
+./installer
+```
+
+# Building 
+
 # OSX-KVM-installer
 An automation of the cli based installation steps for the kholia / OSX-KVM project. This installer just calls each of the cli commands listed on the installation guide. All the credit for the software making this possible goes to kholia. <br>
 All credit for dcli goes to bsutton.
