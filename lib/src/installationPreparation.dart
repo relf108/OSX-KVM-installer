@@ -49,6 +49,7 @@ class InstallationPreparation {
     }
   }
 
+  ///
   static void convertToIMG() {
     try {
       'dmg2img BaseSystem.dmg BaseSystem.img'
@@ -91,4 +92,13 @@ class InstallationPreparation {
     'virt-xml-validate macOS-libvirt-Catalina.xml'
         .start(privileged: true, workingDirectory: '$HOME/OSX-KVM');
   }
+}
+
+///
+bool checkSize(String size) {
+  if (int.tryParse(size) < 30) {
+    echo('Size must be at least 30GB');
+    return false;
+  }
+  return true;
 }

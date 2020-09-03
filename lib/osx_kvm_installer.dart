@@ -1,1 +1,1 @@
-export 'src/installationPreparation.dart';
+export 'src/install.dart';
