@@ -1,6 +1,5 @@
 #! /usr/bin/env dcli
 
-import 'dart:io';
 import 'package:dcli/dcli.dart';
 import './installationPreparation.dart';
 
@@ -9,8 +8,22 @@ void main(List<String> args) {
   InstallationPreparation.cloneOSXKVM();
   InstallationPreparation.fetchInstaller();
   InstallationPreparation.convertToIMG();
-  ///change vm size here, must be at least 30
-  InstallationPreparation.createHDD(sizeGB: 32);
+  var size =
+      ask('Enter size of install in GB (default 64)', defaultValue: '64');
+  while (!checkSize(size)) {
+    size = ask('Enter size of install in GB (default 64)', defaultValue: '64');
+  }
+  InstallationPreparation.createHDD(sizeGB: 64);
   InstallationPreparation.setupQuickNetworking();
-  './OpenCore-Boot.sh'.start(privileged: true ,workingDirectory: '$HOME/OSX-KVM');
+  './OpenCore-Boot.sh'
+      .start(privileged: true, workingDirectory: '$HOME/OSX-KVM');
+  InstallationPreparation.libVirtManager();
+}
+
+bool checkSize(String size) {
+  if (size as int < 30) {
+    echo('Size must be at least 30GB');
+    return false;
+  }
+  return true;
 }
