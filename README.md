@@ -4,7 +4,7 @@ This is purely because it installs dependencies with apt. If you would like to u
 
 # Running 
 ```bash
-wget https://github.com/relf108/OSX-KVM-installer/releases/download/v1.4/osx_kvm_installer
+wget https://github.com/relf108/OSX-KVM-installer/releases/download/v1.5/osx_kvm_installer
 chmod +x osx_kvm_installer
 ./osx_kvm_installer
 ```
