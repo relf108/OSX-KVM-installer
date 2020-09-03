@@ -9,7 +9,7 @@ void main(List<String> args) {
   InstallationPreparation.fetchInstaller();
   InstallationPreparation.convertToIMG();
   var size =
-      ask('Enter size of install in GB (default 64)', defaultValue: '64');
+      ask('Enter size of install in GB (default 64)', defaultValue: '64', validator: Ask.integer);
   while (!checkSize(size)) {
     size = ask('Enter size of install in GB (default 64)', defaultValue: '64');
   }
@@ -21,7 +21,7 @@ void main(List<String> args) {
 }
 
 bool checkSize(String size) {
-  if (size as int < 30) {
+  if (int.tryParse(size) < 30) {
     echo('Size must be at least 30GB');
     return false;
   }
