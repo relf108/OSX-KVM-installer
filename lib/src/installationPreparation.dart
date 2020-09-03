@@ -1,5 +1,7 @@
 #! /usr/bin/env dcli
 
+import 'dart:io';
+
 import 'package:dcli/dcli.dart';
 import 'package:meta/meta.dart';
 
@@ -14,6 +16,19 @@ class InstallationPreparation {
   }
 
   static void cloneOSXKVM() {
+    if (exists('$HOME/OSX-KVM')) {
+      var allowed = ask(
+          'Path $HOME/OSX-KVM found, this must be deleted to continue'
+          ' \n Delete OSX-KVM? [y(Y)/n(N)]',
+          defaultValue: 'n',
+          validator: Ask.alpha);
+      if (allowed == 'y' || allowed == 'Y') {
+        'rm -rf OSX-KVM'.start(privileged: true, workingDirectory: '$HOME');
+      } else {
+        echo('Dissallowed, exiting installer');
+        exit(1);
+      }
+    }
     try {
       'git clone https://github.com/kholia/OSX-KVM.git'
           .start(privileged: true, workingDirectory: '$HOME');
