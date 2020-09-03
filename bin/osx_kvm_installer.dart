@@ -3,6 +3,7 @@
 import 'package:dcli/dcli.dart';
 import 'package:osx_kvm_installer/osx_kvm_installer.dart';
 
+///
 void main(List<String> args) {
   InstallationPreparation.installDependencies();
   InstallationPreparation.cloneOSXKVM();
@@ -20,6 +21,7 @@ void main(List<String> args) {
   InstallationPreparation.libVirtManager();
 }
 
+///
 bool checkSize(String size) {
   if (int.tryParse(size) < 30) {
     echo('Size must be at least 30GB');

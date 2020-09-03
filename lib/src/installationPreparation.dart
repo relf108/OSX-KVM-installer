@@ -6,6 +6,7 @@ import 'package:dcli/dcli.dart';
 import 'package:meta/meta.dart';
 
 class InstallationPreparation {
+  ///
   static void installDependencies() {
     try {
       'sudo apt-get install python qemu uml-utilities virt-manager dmg2img git wget libguestfs-tools -y'
@@ -15,6 +16,7 @@ class InstallationPreparation {
     }
   }
 
+  ///
   static void cloneOSXKVM() {
     if (exists('$HOME/OSX-KVM')) {
       var allowed = ask(
@@ -37,6 +39,7 @@ class InstallationPreparation {
     }
   }
 
+  ///
   static void fetchInstaller() {
     try {
       './fetch-macOS.py'.start(
@@ -55,6 +58,7 @@ class InstallationPreparation {
     }
   }
 
+  ///
   static void createHDD({@required int sizeGB}) {
     try {
       'qemu-img create -f qcow2 mac_hdd_ng.img ${sizeGB.toString()}G'
@@ -64,6 +68,7 @@ class InstallationPreparation {
     }
   }
 
+  ///
   static void setupQuickNetworking() {
     try {
       'ip tuntap add dev tap0 mode tap'
@@ -79,6 +84,7 @@ class InstallationPreparation {
     }
   }
 
+  ///
   static void libVirtManager() {
     r'sed -i "s/CHANGEME/$USER/g" macOS-libvirt-Catalina.xml'
         .start(privileged: true, workingDirectory: '$HOME/OSX-KVM');

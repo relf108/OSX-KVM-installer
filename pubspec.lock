@@ -77,7 +77,7 @@ packages:
       name: dcli
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.20.0"
+    version: "0.23.0"
   equatable:
     dependency: transitive
     description:
@@ -182,7 +182,7 @@ packages:
       name: meta
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.2"
+    version: "1.2.3"
   money2:
     dependency: transitive
     description:
