@@ -4,7 +4,6 @@ import 'installation_preparation.dart';
 
 ///Install OSX
 void install(List<String> args) {
-  //InstallationPreparation.installDependencies();
   PackageManager pm = PackageManager.detectPM();
   pm.installDependencies();
   InstallationPreparation.cloneOSXKVM();
@@ -15,9 +14,11 @@ void install(List<String> args) {
   while (!checkSize(size)) {
     size = ask('Enter size of install in GB (default 64)', defaultValue: '64');
   }
-  InstallationPreparation.createHDD(sizeGB: 64);
+  InstallationPreparation.createHDD(sizeGB: int.tryParse(size));
   InstallationPreparation.setupQuickNetworking();
-  './OpenCore-Boot.sh'.start(
-      privileged: true, workingDirectory: '$HOME/OSX-KVM', detached: true);
+  echo('STARTING OSX. DO NOT TURN OFF THE VM UNTIL INSTALL IS FINISHED \n'
+      'GO TO https://github.com/relf108/OSX-KVM-installer#post-installation FOR GRAPHICAL INSTALL STEPS\n');
+  './OpenCore-Boot.sh'
+      .start(privileged: true, workingDirectory: '$HOME/OSX-KVM');
   InstallationPreparation.libVirtManager();
 }

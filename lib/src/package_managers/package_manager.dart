@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:dcli/dcli.dart';
 import 'package:osx_kvm_installer/src/package_managers/apt_package_manager.dart';
 import 'package:osx_kvm_installer/src/package_managers/pacman_package_manager.dart';
