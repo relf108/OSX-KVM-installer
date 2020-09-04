@@ -1,21 +1,10 @@
 #! /usr/bin/env dcli
 
 import 'dart:io';
-
 import 'package:dcli/dcli.dart';
 import 'package:meta/meta.dart';
 
 class InstallationPreparation {
-  ///
-  static void installDependencies() {
-    try {
-      'sudo apt-get install python qemu uml-utilities virt-manager dmg2img git wget libguestfs-tools -y'
-          .start(privileged: true);
-    } on Exception catch (_) {
-      rethrow;
-    }
-  }
-
   ///
   static void cloneOSXKVM() {
     if (exists('$HOME/OSX-KVM')) {
@@ -25,7 +14,7 @@ class InstallationPreparation {
           defaultValue: 'n',
           validator: Ask.alpha);
       if (allowed == 'y' || allowed == 'Y') {
-        'rm -rf OSX-KVM'.start(privileged: true, workingDirectory: '$HOME');
+        'rm -rf OSX-KVM'.start(workingDirectory: '$HOME');
       } else {
         echo('Dissallowed, exiting installer');
         exit(1);
@@ -88,9 +77,9 @@ class InstallationPreparation {
   ///
   static void libVirtManager() {
     r'sed -i "s/CHANGEME/$USER/g" macOS-libvirt-Catalina.xml'
-        .start(privileged: true, workingDirectory: '$HOME/OSX-KVM');
+        .start(workingDirectory: '$HOME/OSX-KVM');
     'virt-xml-validate macOS-libvirt-Catalina.xml'
-        .start(privileged: true, workingDirectory: '$HOME/OSX-KVM');
+        .start(workingDirectory: '$HOME/OSX-KVM');
   }
 }
 

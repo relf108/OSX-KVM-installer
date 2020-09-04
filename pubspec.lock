@@ -77,7 +77,7 @@ packages:
       name: dcli
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.23.0"
+    version: "0.24.0"
   equatable:
     dependency: transitive
     description:

@@ -1,10 +1,12 @@
 import 'package:dcli/dcli.dart';
-
-import 'installationPreparation.dart';
+import 'package:osx_kvm_installer/src/package_managers/package_manager.dart';
+import 'installation_preparation.dart';
 
 ///Install OSX
 void install(List<String> args) {
-  InstallationPreparation.installDependencies();
+  //InstallationPreparation.installDependencies();
+  PackageManager pm = PackageManager.detectPM();
+  pm.installDependencies();
   InstallationPreparation.cloneOSXKVM();
   InstallationPreparation.fetchInstaller();
   InstallationPreparation.convertToIMG();
@@ -15,7 +17,7 @@ void install(List<String> args) {
   }
   InstallationPreparation.createHDD(sizeGB: 64);
   InstallationPreparation.setupQuickNetworking();
-  './OpenCore-Boot.sh'
-      .start(privileged: true, workingDirectory: '$HOME/OSX-KVM');
+  './OpenCore-Boot.sh'.start(
+      privileged: true, workingDirectory: '$HOME/OSX-KVM', detached: true);
   InstallationPreparation.libVirtManager();
 }
