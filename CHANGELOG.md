@@ -1,3 +1,7 @@
+# 0.0.7
+improved usability and bug fixes regarding setting up vm
+untested pacman suport and manual dependency install option for unsupported package managers
+
 # 0.0.6
 pub points
 
