@@ -5,11 +5,21 @@ import 'package:dcli/dcli.dart';
 import 'package:meta/meta.dart';
 
 class InstallationPreparation {
+  static bool detectWSL() {
+    var result = read('/proc/version');
+    result.forEach((line) {
+      if (line.contains('Microsoft')) {
+        return true;
+      }
+    });
+    return false;
+  }
+
   ///
   static void cloneOSXKVM() {
-    if (exists('$HOME/OSX-KVM')) {
+    if (exists('$HOME/OSX-KVM-installer/OSX-KVM')) {
       var allowed = ask(
-          'Path $HOME/OSX-KVM found, re-clone to ensure latest version?'
+          'OSX-KVM found, re-clone to ensure latest version?'
           ' \n [y(Y)/n(N)]',
           defaultValue: 'n',
           validator: Ask.alpha);
@@ -17,7 +27,7 @@ class InstallationPreparation {
         'rm -rf OSX-KVM'.start(privileged: true, workingDirectory: '$HOME');
         try {
           'git clone https://github.com/kholia/OSX-KVM.git'
-              .start(privileged: true, workingDirectory: '$HOME');
+              .start(workingDirectory: '$HOME/OSX-KVM-installer');
         } on Exception catch (_) {
           rethrow;
         }
@@ -31,7 +41,9 @@ class InstallationPreparation {
   static void fetchInstaller() {
     try {
       './fetch-macOS.py'.start(
-          privileged: true, workingDirectory: '$HOME/OSX-KVM', terminal: true);
+          privileged: true,
+          workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM',
+          terminal: true);
     } on Exception catch (_) {
       rethrow;
     }
@@ -40,8 +52,9 @@ class InstallationPreparation {
   ///
   static void convertToIMG() {
     try {
-      'dmg2img BaseSystem.dmg BaseSystem.img'
-          .start(privileged: true, workingDirectory: '$HOME/OSX-KVM');
+      'dmg2img BaseSystem.dmg BaseSystem.img'.start(
+          privileged: true,
+          workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM');
     } on Exception catch (_) {
       rethrow;
     }
@@ -50,8 +63,9 @@ class InstallationPreparation {
   ///
   static void createHDD({@required int sizeGB}) {
     try {
-      'qemu-img create -f qcow2 mac_hdd_ng.img ${sizeGB.toString()}G'
-          .start(privileged: true, workingDirectory: '$HOME/OSX-KVM');
+      'qemu-img create -f qcow2 mac_hdd_ng.img ${sizeGB.toString()}G'.start(
+          privileged: true,
+          workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM');
     } on Exception catch (_) {
       rethrow;
     }
@@ -59,16 +73,20 @@ class InstallationPreparation {
 
   ///
   static void setupQuickNetworking() {
-    var attempts;
+    var attempts = 0;
     try {
-      'ip tuntap add dev tap0 mode tap'
-          .start(privileged: true, workingDirectory: '$HOME/OSX-KVM');
-      'ip link set tap0 up promisc on'
-          .start(privileged: true, workingDirectory: '$HOME/OSX-KVM');
-      'ip link set dev virbr0 up'
-          .start(privileged: true, workingDirectory: '$HOME/OSX-KVM');
-      'ip link set dev tap0 master virbr0'
-          .start(privileged: true, workingDirectory: '$HOME/OSX-KVM');
+      'ip tuntap add dev tap0 mode tap'.start(
+          privileged: true,
+          workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM');
+      'ip link set tap0 up promisc on'.start(
+          privileged: true,
+          workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM');
+      'ip link set dev virbr0 up'.start(
+          privileged: true,
+          workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM');
+      'ip link set dev tap0 master virbr0'.start(
+          privileged: true,
+          workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM');
     } on Exception catch (_) {
       echo('tap0 unavailable freeing resource and retrying ${attempts}');
       attempts++;
@@ -85,12 +103,22 @@ class InstallationPreparation {
 
   ///
   static void libVirtManager() {
-    r'sed -i "s/CHANGEME/$USER/g" macOS-libvirt-Catalina.xml'
-        .start(privileged: true, workingDirectory: '$HOME/OSX-KVM');
+    r'sed -i "s/CHANGEME/$USER/g" macOS-libvirt-Catalina.xml'.start(
+        privileged: true, workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM');
     'virt-xml-validate macOS-libvirt-Catalina.xml'
-        .start(workingDirectory: '$HOME/OSX-KVM');
+        .start(workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM');
     'virsh --connect qemu:///system define macOS-libvirt-Catalina.xml'
-        .start(workingDirectory: '$HOME/OSX-KVM');
+        .start(workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM');
+  }
+
+  ///
+  static void setupEXE() {
+    fetch(
+        url:
+            'https://github.com/relf108/OSX-KVM-runner/raw/master/osx_kvm_runner',
+        saveToPath: '$HOME/OSX-KVM-installer/OSX-KVM');
+    'chmod +x osx_kvm_runner'
+        .start(workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM');
   }
 }
 
