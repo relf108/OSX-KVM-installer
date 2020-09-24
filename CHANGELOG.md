@@ -1,3 +1,8 @@
+# 0.0.8
+Fixed dist detection
+Fixed dist detection
+Provided info on wsl setup on install. Moving away from setting up vm in favour of creating executable to start osx.
+
 # 0.0.7
 improved usability and bug fixes regarding setting up vm
 untested pacman suport and manual dependency install option for unsupported package managers

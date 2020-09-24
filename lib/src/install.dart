@@ -21,6 +21,7 @@ void install(List<String> args) {
   }
   var pm = PackageManager.detectPM();
   pm.installDependencies();
+  createDir('$HOME/OSX-KVM-installer');
   InstallationPreparation.cloneOSXKVM();
   InstallationPreparation.fetchInstaller();
   InstallationPreparation.convertToIMG();
