@@ -9,8 +9,8 @@ abstract class PackageManager {
 
   ///Checks if pacman or apt are available on users system.
   static PackageManager detectPM() {
-    var apt = which('apt');
-    var pacman = which('pacman');
+    var apt = which('apt').firstLine;
+    var pacman = which('pacman').firstLine;
     if (apt != null) {
       PackageManager apt = AptPackageManger();
       return apt;

@@ -5,6 +5,7 @@ import 'package:dcli/dcli.dart';
 import 'package:meta/meta.dart';
 
 class InstallationPreparation {
+  
   static bool detectWSL() {
     var result = read('/proc/version');
     result.forEach((line) {

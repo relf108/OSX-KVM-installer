@@ -7,6 +7,8 @@ import 'installation_preparation.dart';
 ///Install OSX
 void install(List<String> args) {
   createDir('$HOME/OSX-KVM-installer');
+
+  //temporary fix to issue of wsl until I set this up programatically
   if (InstallationPreparation.detectWSL()) {
     echo('WSL detected make sure you have VcXsrv Windows X Server installed. \n'
         'If you do not, follow this guide to do so https://techcommunity.microsoft.com/t5/windows-dev-appconsult/running-wsl-gui-apps-on-windows-10/ba-p/1493242');
@@ -17,7 +19,7 @@ void install(List<String> args) {
     }
     //Will eventually write my own install guide on wiki and automate settings DISPLAY path var in bashrc
   }
-  PackageManager pm = PackageManager.detectPM();
+  var pm = PackageManager.detectPM();
   pm.installDependencies();
   InstallationPreparation.cloneOSXKVM();
   InstallationPreparation.fetchInstaller();
