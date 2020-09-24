@@ -34,6 +34,13 @@ class InstallationPreparation {
       } else {
         echo('Continuing with local version');
       }
+    } else {
+      try {
+        'git clone https://github.com/kholia/OSX-KVM.git'
+            .start(workingDirectory: '$HOME/OSX-KVM-installer');
+      } on Exception catch (_) {
+        rethrow;
+      }
     }
   }
 

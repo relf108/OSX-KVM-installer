@@ -6,7 +6,9 @@ import 'installation_preparation.dart';
 
 ///Install OSX
 void install(List<String> args) {
-  createDir('$HOME/OSX-KVM-installer');
+  if (exists('$HOME/OSX-KVM-installer')) {
+    createDir('$HOME/OSX-KVM-installer');
+  }
 
   //temporary fix to issue of wsl until I set this up programatically
   if (InstallationPreparation.detectWSL()) {
@@ -21,7 +23,6 @@ void install(List<String> args) {
   }
   var pm = PackageManager.detectPM();
   pm.installDependencies();
-  createDir('$HOME/OSX-KVM-installer');
   InstallationPreparation.cloneOSXKVM();
   InstallationPreparation.fetchInstaller();
   InstallationPreparation.convertToIMG();
