@@ -6,7 +6,7 @@ import 'installation_preparation.dart';
 
 ///Install OSX
 void install(List<String> args) {
-  if (exists('$HOME/OSX-KVM-installer')) {
+  if (!exists('$HOME/OSX-KVM-installer')) {
     createDir('$HOME/OSX-KVM-installer');
   }
 
