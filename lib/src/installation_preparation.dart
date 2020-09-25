@@ -24,7 +24,8 @@ class InstallationPreparation {
           defaultValue: 'n',
           validator: Ask.alpha);
       if (allowed.toLowerCase() == 'y') {
-        'rm -rf OSX-KVM'.start(privileged: true, workingDirectory: '$HOME');
+        'rm -rf OSX-KVM-installer/OSX-KVM'
+            .start(privileged: true, workingDirectory: '$HOME');
         try {
           'git clone https://github.com/kholia/OSX-KVM.git'
               .start(workingDirectory: '$HOME/OSX-KVM-installer');

@@ -12,8 +12,8 @@ class PacmanPackageManager extends PackageManager {
     //could do this for the user pacman -S --needed base-devel
     if (aur.toLowerCase() != 'n') {
       try {
-        'pacman -Sy --needed base-devel'.start(privileged: true);
-        'pacman -Sy python qemu virt-manager dmg2img git wget libguestfs -y'
+        'pacman -Sy --noconfirm --needed base-devel'.start(privileged: true);
+        'pacman -Sy--noconfirm python qemu virt-manager dmg2img git wget libguestfs -y'
             .start(privileged: true);
         'pamac build uml-utilities'.start();
       } on Exception catch (_) {
