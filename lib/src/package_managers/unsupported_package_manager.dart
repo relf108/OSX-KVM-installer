@@ -7,7 +7,8 @@ class UnsupportedPackageManager extends PackageManager {
   @override
   void installDependencies() {
     echo(
-        'Can\'t find apt or pacman package manager. you\'ll need to install the dependencies '
+        'Either the skip depencies flag was used or we can\'t find apt or pacman package manager.'
+        ' you\'ll need to install the dependencies '
         '[python qemu uml-utilities virt-manager dmg2img git wget libguestfs-tools] yourself');
     var selfInsalled = ask(
         'If you\'ve already insatlled the dependencies press [y(Y)] to continue. Press any button to stop');

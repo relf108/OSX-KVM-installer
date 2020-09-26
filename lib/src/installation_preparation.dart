@@ -48,7 +48,9 @@ class InstallationPreparation {
   ///
   static void fetchInstaller() {
     try {
-      './fetch-macOS.py'.start(
+      //Installs the latest version of catalina as Koila's
+      //menu seems to be broken at the moment
+      './fetch-macOS.py --version 10.15.6'.start(
           privileged: true,
           workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM',
           terminal: true);
@@ -121,12 +123,22 @@ class InstallationPreparation {
 
   ///
   static void setupEXE() {
+    if (!exists('$HOME/OSX-KVM-installer/OSX-KVM-runner')) {
+      createDir('$HOME/OSX-KVM-installer/OSX-KVM-runner');
+    } else {
+      'rm -rf OSX-KVM-runner'
+          .start(workingDirectory: '$HOME/OSX-KVM-installer');
+      createDir('$HOME/OSX-KVM-installer/OSX-KVM-runner');
+    }
     fetch(
         url:
-            'https://github.com/relf108/OSX-KVM-runner/raw/master/osx_kvm_runner',
-        saveToPath: '$HOME/OSX-KVM-installer/OSX-KVM');
+            'https://github.com/relf108/OSX-KVM-runner/releases/download/beta-2/OSX-KVM-runner',
+        saveToPath: '$HOME/OSX-KVM-installer/OSX-KVM-runner/osx_kvm_runner');
+    // 'wget https://github.com/relf108/OSX-KVM-runner/releases/download/beta-2/OSX-KVM-runner'
+    //     .start(workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM-runner');
+
     'chmod +x osx_kvm_runner'
-        .start(workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM');
+        .start(workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM-runner');
   }
 }
 

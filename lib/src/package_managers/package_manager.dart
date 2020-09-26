@@ -8,7 +8,11 @@ abstract class PackageManager {
   void installDependencies();
 
   ///Checks if pacman or apt are available on users system.
-  static PackageManager detectPM() {
+  static PackageManager detectPM(String flag) {
+    if(flag == '-s'){
+      PackageManager unsupported = UnsupportedPackageManager();
+      return unsupported;
+    }
     var apt = which('apt').firstLine;
     var pacman = which('pacman').firstLine;
     if (apt != null) {

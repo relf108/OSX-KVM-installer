@@ -21,7 +21,8 @@ void install(List<String> args) {
     }
     //Will eventually write my own install guide on wiki and automate settings DISPLAY path var in bashrc
   }
-  var pm = PackageManager.detectPM();
+  //if flag -s is passed in skip dep install
+  var pm = PackageManager.detectPM(args[0].toString());
   pm.installDependencies();
   InstallationPreparation.cloneOSXKVM();
   InstallationPreparation.fetchInstaller();
