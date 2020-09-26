@@ -9,7 +9,7 @@ abstract class PackageManager {
 
   ///Checks if pacman or apt are available on users system.
   static PackageManager detectPM(String flag) {
-    if(flag == '-s'){
+    if (flag == '-s') {
       PackageManager unsupported = UnsupportedPackageManager();
       return unsupported;
     }

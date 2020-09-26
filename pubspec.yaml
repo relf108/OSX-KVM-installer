@@ -1,5 +1,5 @@
 name: osx_kvm_installer
-version: 0.0.14
+version: 0.0.15
 homepage: https://github.com/relf108/OSX-KVM-installer
 description: A cli based application which automates the installation and installation preperation steps required for the OSX-KVM project.
 environment: 

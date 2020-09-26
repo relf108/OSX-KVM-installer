@@ -1,3 +1,6 @@
+# 0.0.15
+Create flag -s to skip dependency install and attempted fix at pacman bug builing uml utils
+
 # 0.0.14
 
 # 0.0.13
