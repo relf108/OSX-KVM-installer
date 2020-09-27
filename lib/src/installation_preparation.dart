@@ -134,8 +134,6 @@ class InstallationPreparation {
         url:
             'https://github.com/relf108/OSX-KVM-runner/releases/download/beta-2/OSX-KVM-runner',
         saveToPath: '$HOME/OSX-KVM-installer/OSX-KVM-runner/osx_kvm_runner');
-    // 'wget https://github.com/relf108/OSX-KVM-runner/releases/download/beta-2/OSX-KVM-runner'
-    //     .start(workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM-runner');
 
     'chmod +x osx_kvm_runner'
         .start(workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM-runner');
