@@ -22,7 +22,7 @@ void install(List<String> args) {
   }
 
   //if flag -s is passed in skip dep install
-  var flag ='';
+  var flag = '';
   if (!args.isEmpty) {
     flag = args[0].toString();
   }

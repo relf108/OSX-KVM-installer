@@ -1,3 +1,10 @@
+# 0.0.16
+fix + bin
+new bin
+small fix
+new binary
+Work on wsl functionality. Now attempts to fetch and run exe as well as change display variable in bashrc
+
 # 0.0.15
 Create flag -s to skip dependency install and attempted fix at pacman bug builing uml utils
 
