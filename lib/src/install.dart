@@ -23,7 +23,7 @@ void install(List<String> args) {
 
   //if flag -s is passed in skip dep install
   var flag ='';
-  if (args[0] != null) {
+  if (!args.isEmpty) {
     flag = args[0].toString();
   }
   var pm = PackageManager.detectPM(flag);
