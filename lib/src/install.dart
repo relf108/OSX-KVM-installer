@@ -6,8 +6,6 @@ import 'installation_preparation.dart';
 
 ///Install OSX
 void install(List<String> args) {
-
-
   if (!exists('$HOME/OSX-KVM-installer')) {
     createDir('$HOME/OSX-KVM-installer');
   }
@@ -24,7 +22,11 @@ void install(List<String> args) {
   }
 
   //if flag -s is passed in skip dep install
-  var pm = PackageManager.detectPM(args[0].toString());
+  var flag ='';
+  if (args[0] != null) {
+    flag = args[0].toString();
+  }
+  var pm = PackageManager.detectPM(flag);
   pm.installDependencies();
   InstallationPreparation.cloneOSXKVM();
   InstallationPreparation.fetchInstaller();
