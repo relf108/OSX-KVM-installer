@@ -21,7 +21,7 @@ Answer requested input as the program runs and you're done.
 # Post installation
 After the script has been run a qemu view will pop up with the osx installer. <br>
 Select the base-osx drive with your keyboard, another window will pop up. <br>
-Open the disk utility and select the drive with storage set to whatever you passed in (32 is the default). <br>
+Open the disk utility and select the drive with storage set to whatever you passed in (64 is the default). <br>
 Select erase on this drive and once that process is finished close the window. You should be taken back to the program select screen.<br>
 Select reinstall macOS and follow the installation process.<br>
 To run your new macOS installation any time simply navigate to the OSX-KVM-runner directory created inside the OSX-KVM-installer directory.<br>
