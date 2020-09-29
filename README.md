@@ -4,6 +4,7 @@ wget https://github.com/relf108/OSX-KVM-installer/releases/download/v1.5/osx_kvm
 chmod +x osx_kvm_installer
 ./osx_kvm_installer
 ```
+Thats it, you've just run the installer, now go to post installation for more info on setting up your install.
 
 # Building 
 An automation of the cli based installation steps for the kholia / OSX-KVM project. This installer just calls each of the cli commands listed on the installation guide. All the credit for the software making this possible goes to kholia. <br>
