@@ -40,10 +40,16 @@ class InstallationPreparation {
     try {
       //Installs the latest version of catalina as Koila's
       //menu seems to be broken at the moment
-      './fetch-macOS.py --version 10.15.6'.start(
+
+      './fetch-macOS-v2.py'.start(
           privileged: true,
           workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM',
           terminal: true);
+
+      // './fetch-macOS.py --version 10.15.6'.start(
+      //     privileged: true,
+      //     workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM',
+      //     terminal: true);
     } on Exception catch (_) {
       rethrow;
     }
