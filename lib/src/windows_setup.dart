@@ -5,9 +5,9 @@ class WindowsSetup {
     var result = read('/proc/version');
     result.forEach((line) {
       if (line.contains('Microsoft')) {
+        echo('WSL DETECTED');
         return true;
       }
-      echo('WSL DETECTED');
     });
     return false;
   }
