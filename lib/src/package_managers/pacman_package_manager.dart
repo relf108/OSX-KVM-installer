@@ -15,7 +15,8 @@ class PacmanPackageManager extends PackageManager {
         'pacman -Sy --noconfirm python qemu virt-manager dmg2img git wget libguestfs -y'
             .start(privileged: true);
         'pacman -Syu --noconfirm pamac-gtk'.start(privileged: true);
-        'pamac build uml_utilities'.start();
+        ///no-confirm is not a typo. The flag is different for pacman and pamac
+        'pamac build uml_utilities --no-confirm'.start(privileged: true);
       } on Exception catch (_) {
         rethrow;
       }
