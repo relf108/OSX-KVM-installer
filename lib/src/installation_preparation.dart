@@ -87,9 +87,7 @@ class InstallationPreparation {
           privileged: true,
           workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM');
     } on Exception catch (_) {
-      var attempts = 0;
-      echo('tap0 unavailable freeing resource and retrying ${attempts} ');
-      attempts++;
+      echo('tap0 unavailable freeing resource and retrying');
       'ip link delete tap0'.start(privileged: true);
       'virsh net-start default'.start();
       if (retry == false) {
