@@ -37,7 +37,7 @@ void install(List<String> args) {
   }
   InstallationPreparation.createHDD(sizeGB: int.tryParse(size));
   InstallationPreparation.setupQuickNetworking(false);
-  echo('STARTING OSX. DO NOT TURN OFF THE VM UNTIL INSTALL IS FINISHED \n'
+  orange('STARTING OSX. DO NOT TURN OFF THE VM UNTIL INSTALL IS FINISHED \n'
       'GO TO https://github.com/relf108/OSX-KVM-installer#post-installation FOR GRAPHICAL INSTALL STEPS\n');
   './OpenCore-Boot.sh'.start(
       privileged: true, workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM');
