@@ -79,7 +79,7 @@ class InstallationPreparation {
   }
 
   ///
-  static Future<void> setupQuickNetworking(bool retry) async {
+  static Future<void> setupQuickNetworking(int retries) async {
     try {
       'ip tuntap add dev tap0 mode tap'.start(
           privileged: true,
@@ -99,46 +99,53 @@ class InstallationPreparation {
       try {
         'virsh net-start default'.start(privileged: true);
       } on Exception catch (_) {
-        echo(red("default network not found, creating default\n"));
+        try {
+          echo(red("default network not found, creating default\n"));
 
-        'systemctl enable libvirtd'.start(
-            privileged: true,
-            workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM');
-        'systemctl start libvirtd'.start(
-            privileged: true,
-            workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM');
+          'systemctl enable libvirtd'.start(
+              privileged: true,
+              workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM');
+          'systemctl start libvirtd'.start(
+              privileged: true,
+              workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM');
 
-        var defaultXml =
-            await new File('$HOME/OSX-KVM-installer/OSX-KVM/default.xml')
-                .create(recursive: false);
-        var stream = defaultXml.openWrite();
-        stream.write('<network>\n');
-        stream.write('  <name>default</name>\n');
-        stream.write('  <uuid>9a05da11-e96b-47f3-8253-a3a482e445f5</uuid>\n');
-        stream.write('  <forward mode=\'nat\'/>\n');
-        stream.write('  <bridge name=\'virbr0\' stp=\'on\' delay=\'0\'/>\n');
-        stream.write('  <mac address=\'52:54:00:0a:cd:21\'/>\n');
-        stream.write(
-            '  <ip address=\'192.168.122.1\' netmask=\'255.255.255.0\'>\n');
-        stream.write('    <dhcp>\n');
-        stream.write(
-            '      <range start=\'192.168.122.2\' end=\'192.168.122.254\'/>\n');
-        stream.write('    </dhcp>\n');
-        stream.write('  </ip>\n');
-        stream.write('</network>\n');
-        stream.close();
+          var defaultXml =
+              await new File('$HOME/OSX-KVM-installer/OSX-KVM/default.xml')
+                  .create(recursive: false);
+          var stream = defaultXml.openWrite();
+          stream.write('<network>\n');
+          stream.write('  <name>default</name>\n');
+          stream.write('  <uuid>9a05da11-e96b-47f3-8253-a3a482e445f5</uuid>\n');
+          stream.write('  <forward mode=\'nat\'/>\n');
+          stream.write('  <bridge name=\'virbr0\' stp=\'on\' delay=\'0\'/>\n');
+          stream.write('  <mac address=\'52:54:00:0a:cd:21\'/>\n');
+          stream.write(
+              '  <ip address=\'192.168.122.1\' netmask=\'255.255.255.0\'>\n');
+          stream.write('    <dhcp>\n');
+          stream.write(
+              '      <range start=\'192.168.122.2\' end=\'192.168.122.254\'/>\n');
+          stream.write('    </dhcp>\n');
+          stream.write('  </ip>\n');
+          stream.write('</network>\n');
+          stream.close();
 
-        'virsh net-define --file default.xml'
-            .start(privileged: true, workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM');
-        //'virsh net-start default'.start(privileged: true);
-
-        if (retry == false) {
-          setupQuickNetworking(true);
+          'virsh net-define --file default.xml'.start(
+              privileged: true,
+              workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM');
+          //'virsh net-start default'.start(privileged: true);
+        } on Exception catch (_) {
+          if (retries < 10) {
+            setupQuickNetworking(retries + 1);
+          } else {
+            echo(red(
+                'FATAL: Unable to setup networking after retry. There might be some issue other than unavailable resources\n'));
+            exit(1);
+          }
         }
       }
 
-      if (retry == false) {
-        setupQuickNetworking(true);
+      if (retries < 10) {
+        setupQuickNetworking(retries + 1);
       } else {
         echo(red(
             'FATAL: Unable to setup networking after retry. There might be some issue other than unavailable resources\n'));

@@ -36,7 +36,7 @@ void install(List<String> args) {
     size = ask('Enter size of install in GB (default 64)', defaultValue: '64');
   }
   InstallationPreparation.createHDD(sizeGB: int.tryParse(size));
-  InstallationPreparation.setupQuickNetworking(false);
+  InstallationPreparation.setupQuickNetworking(0);
   echo(orange('STARTING OSX. DO NOT TURN OFF THE VM UNTIL INSTALL IS FINISHED \n'
       'GO TO https://github.com/relf108/OSX-KVM-installer#post-installation FOR GRAPHICAL INSTALL STEPS\n'));
   './OpenCore-Boot.sh'.start(
