@@ -10,7 +10,7 @@ class UnsupportedPackageManager extends PackageManager {
         ' you\'ll need to install the dependencies '
         '[python qemu uml-utilities virt-manager dmg2img git wget libguestfs-tools] yourself\n'));
     var selfInsalled = ask(
-        'If you\'ve already insatlled the dependencies press [y(Y)] to continue. Press any button to stop');
+        'If you\'ve already installed the dependencies press [y(Y)] to continue. Press any button to stop');
     if (selfInsalled.toLowerCase() != 'y') {
       echo(green('User will install depenendencies\n'));
       exit(1);
