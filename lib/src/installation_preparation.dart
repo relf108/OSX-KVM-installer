@@ -23,7 +23,7 @@ class InstallationPreparation {
           rethrow;
         }
       } else {
-        green('Continuing with local version');
+        echo(green('Continuing with local version'));
       }
     } else {
       try {
@@ -93,13 +93,13 @@ class InstallationPreparation {
           privileged: true,
           workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM');
     } on Exception catch (_) {
-      red('tap0 unavailable freeing resource and retrying');
+      echo(red('tap0 unavailable freeing resource and retrying'));
       'ip link delete tap0'.start(privileged: true);
       'virsh net-start default'.start();
       if (retry == false) {
         setupQuickNetworking(true);
       } else {
-        red('FATAL: Unable to setup networking after retry. There might be some issue other than unavailable resources');
+        echo(red('FATAL: Unable to setup networking after retry. There might be some issue other than unavailable resources'));
         exit(1);
       }
     }

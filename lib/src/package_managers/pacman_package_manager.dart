@@ -21,7 +21,7 @@ class PacmanPackageManager extends PackageManager {
         rethrow;
       }
     } else {
-      orange('Dissallowed, exiting installer');
+      echo(orange('Dissallowed, exiting installer'));
       exit(1);
     }
   }
