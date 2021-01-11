@@ -12,16 +12,19 @@ class PacmanPackageManager extends PackageManager {
     if (aur.toLowerCase() != 'n') {
       try {
         'pacman -Sy --noconfirm --needed base-devel'.start(privileged: true);
-        'pacman -Sy --noconfirm python qemu virt-manager dmg2img git wget libguestfs -y'
+        'pacman -Sy --noconfirm python qemu virt-manager dmg2img git wget libguestfs firewalld -y'
             .start(privileged: true);
         'pacman -Syu --noconfirm pamac-gtk'.start(privileged: true);
+
         ///no-confirm is not a typo. The flag is different for pacman and pamac
         'pamac build uml_utilities --no-confirm'.start(privileged: true);
+        'systemctl enable --now firewalld'.start(privileged: true);
+        'systemctl restart libvirtd'.start(privileged: true);
       } on Exception catch (_) {
         rethrow;
       }
     } else {
-      echo(orange('Dissallowed, exiting installer'));
+      echo(orange('Dissallowed, exiting installer\n'));
       exit(1);
     }
   }

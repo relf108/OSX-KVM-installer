@@ -2,6 +2,7 @@
 
 import 'dart:io';
 import 'package:dcli/dcli.dart';
+import 'package:meta/dart2js.dart';
 import 'package:meta/meta.dart';
 
 class InstallationPreparation {
@@ -23,7 +24,7 @@ class InstallationPreparation {
           rethrow;
         }
       } else {
-        echo(green('Continuing with local version'));
+        echo(green('Continuing with local version\n'));
       }
     } else {
       try {
@@ -78,7 +79,7 @@ class InstallationPreparation {
   }
 
   ///
-  static void setupQuickNetworking(bool retry) {
+  static Future<void> setupQuickNetworking(bool retry) async {
     try {
       'ip tuntap add dev tap0 mode tap'.start(
           privileged: true,
@@ -93,13 +94,54 @@ class InstallationPreparation {
           privileged: true,
           workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM');
     } on Exception catch (_) {
-      echo(red('tap0 unavailable freeing resource and retrying'));
+      echo(red('tap0 unavailable freeing resource and retrying\n'));
       'ip link delete tap0'.start(privileged: true);
-      'virsh net-start default'.start();
+      try {
+        'virsh net-start default'.start(privileged: true);
+      } on Exception catch (_) {
+        echo(red("default network not found, creating default\n"));
+
+        'systemctl enable libvirtd'.start(
+            privileged: true,
+            workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM');
+        'systemctl start libvirtd'.start(
+            privileged: true,
+            workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM');
+
+        var defaultXml =
+            await new File('$HOME/OSX-KVM-installer/OSX-KVM/default.xml')
+                .create(recursive: false);
+        var stream = defaultXml.openWrite();
+        stream.write('<network>\n');
+        stream.write('  <name>default</name>\n');
+        stream.write('  <uuid>9a05da11-e96b-47f3-8253-a3a482e445f5</uuid>\n');
+        stream.write('  <forward mode=\'nat\'/>\n');
+        stream.write('  <bridge name=\'virbr0\' stp=\'on\' delay=\'0\'/>\n');
+        stream.write('  <mac address=\'52:54:00:0a:cd:21\'/>\n');
+        stream.write(
+            '  <ip address=\'192.168.122.1\' netmask=\'255.255.255.0\'>\n');
+        stream.write('    <dhcp>\n');
+        stream.write(
+            '      <range start=\'192.168.122.2\' end=\'192.168.122.254\'/>\n');
+        stream.write('    </dhcp>\n');
+        stream.write('  </ip>\n');
+        stream.write('</network>\n');
+        stream.close();
+
+        'virsh net-define --file default.xml'
+            .start(privileged: true, workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM');
+        //'virsh net-start default'.start(privileged: true);
+
+        if (retry == false) {
+          setupQuickNetworking(true);
+        }
+      }
+
       if (retry == false) {
         setupQuickNetworking(true);
       } else {
-        echo(red('FATAL: Unable to setup networking after retry. There might be some issue other than unavailable resources'));
+        echo(red(
+            'FATAL: Unable to setup networking after retry. There might be some issue other than unavailable resources\n'));
         exit(1);
       }
     }
