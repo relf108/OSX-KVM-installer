@@ -1,3 +1,36 @@
+# 0.1.1
+Debian testing complete
+pub release
+Arch network setup issues should be fixed
+fix typo
+major testing on arch based distro support
+echo log messages
+Create FUNDING.yml
+fix pamac build
+Coloures messages
+WSL detected message only appears on windows systems now.
+update for big sur support and further testing
+fix recursive loop when networking can't be setup
+udpated bin
+Merge branch 'master' of https://github.com/relf108/OSX-KVM-installer
+Continued work on windows support
+Update README.md
+Update README.md
+Update README.md
+release
+fix + bin
+new bin
+small fix
+new binary
+Work on wsl functionality. Now attempts to fetch and run exe as well as change display variable in bashrc
+release beta 15
+Create flag -s to skip dependency install and attempted fix at pacman bug builing uml utils
+space
+fix bug created by resutructuring of install directory
+missing ! :/
+bugfixes
+small bugfix for non git installs
+
 # 0.1.0
 Arch network setup issues should be fixed
 fix typo
