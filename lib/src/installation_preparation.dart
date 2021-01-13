@@ -78,6 +78,18 @@ class InstallationPreparation {
       'ip tuntap add dev tap0 mode tap'.start(
           privileged: true,
           workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM');
+    } on Exception catch (_) {
+      echo(orange('tap0 unavailable freeing resource and retrying\n'));
+      'ip link delete tap0'.start(privileged: true);
+      if (retries < 10) {
+        setupQuickNetworking(retries + 1);
+      } else {
+        echo(red(
+            'FATAL: Unable to setup networking after retry. There might be some issue other than unavailable resources\n'));
+        exit(1);
+      }
+    }
+    try {
       'ip link set tap0 up promisc on'.start(
           privileged: true,
           workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM');
@@ -88,8 +100,6 @@ class InstallationPreparation {
           privileged: true,
           workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM');
     } on Exception catch (_) {
-      echo(orange('tap0 unavailable freeing resource and retrying\n'));
-      'ip link delete tap0'.start(privileged: true);
       try {
         'virsh net-start default'.start(privileged: true);
       } on Exception catch (_) {
