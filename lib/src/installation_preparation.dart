@@ -10,8 +10,8 @@ class InstallationPreparation {
   static void cloneOSXKVM() {
     if (exists('$HOME/OSX-KVM-installer/OSX-KVM')) {
       var allowed = ask(
-          'OSX-KVM found, re-clone to ensure latest version?'
-          ' \n [y(Y)/n(N)]',
+          orange('OSX-KVM found, re-clone to ensure latest version?'
+              ' \n [y(Y)/n(N)]'),
           defaultValue: 'n',
           validator: Ask.alpha);
       if (allowed.toLowerCase() == 'y') {
@@ -39,18 +39,12 @@ class InstallationPreparation {
   ///
   static void fetchInstaller() {
     try {
-      //Installs the latest version of catalina as Koila's
-      //menu seems to be broken at the moment
-
+      echo(
+          orange('Heads up, the installer has not been tested with Big Sur\n'));
       './fetch-macOS-v2.py'.start(
           privileged: true,
           workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM',
           terminal: true);
-
-      // './fetch-macOS.py --version 10.15.6'.start(
-      //     privileged: true,
-      //     workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM',
-      //     terminal: true);
     } on Exception catch (_) {
       rethrow;
     }
@@ -94,13 +88,13 @@ class InstallationPreparation {
           privileged: true,
           workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM');
     } on Exception catch (_) {
-      echo(red('tap0 unavailable freeing resource and retrying\n'));
+      echo(orange('tap0 unavailable freeing resource and retrying\n'));
       'ip link delete tap0'.start(privileged: true);
       try {
         'virsh net-start default'.start(privileged: true);
       } on Exception catch (_) {
         try {
-          echo(red("default network not found, creating default\n"));
+          echo(orange("default network not found, creating default\n"));
 
           'systemctl enable libvirtd'.start(
               privileged: true,
