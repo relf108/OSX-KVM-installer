@@ -184,6 +184,13 @@ class InstallationPreparation {
 
     'chmod +x osx_kvm_runner'
         .start(workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM-runner');
+    if (Shell.current.matchByName(BashShell.shellName)) {
+      '.bashrc'
+          .append(r'PATH="$PATH":"$HOME/OSX-KVM-installer/OSX-KVM-runner"');
+    }
+    if (Shell.current.matchByName(ZshShell.shellName)) {
+      '.zshrc'.append(r'PATH="$PATH":"$HOME/OSX-KVM-installer/OSX-KVM-runner"');
+    }
   }
 }
 

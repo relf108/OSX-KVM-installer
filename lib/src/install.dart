@@ -45,8 +45,13 @@ void install(List<String> args) {
       'GO TO https://github.com/relf108/OSX-KVM-installer#post-installation FOR GRAPHICAL INSTALL STEPS\n'));
   './OpenCore-Boot.sh'.start(
       privileged: true, workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM');
-  InstallationPreparation.libVirtManager();
-  echo(green('OSX added to virt manager\n'));
+  try {
+    InstallationPreparation.libVirtManager();
+    echo(green('OSX added to virt manager\n'));
+  } on Exception catch (_) {
+    echo(orange(
+        'Failed to add vm to virt manager, not to worry it can still be run with the OSX-KVM-runner\n'));
+  }
   InstallationPreparation.setupEXE();
   echo(green(
       'Setup complete. \n If you like this software please consider staring this project or donating'));
