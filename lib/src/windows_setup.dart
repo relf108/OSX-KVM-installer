@@ -21,7 +21,7 @@ class WindowsSetup {
     'vcxsrv-installer.exe /quiet'
         .start(workingDirectory: '$HOME/OSX-KVM-installer');
 
-    'export DISPLAY="`grep nameserver /etc/resolv.conf | sed \'s/nameserver //\'`:0\" >> /etc/bash.bashrc'
-        .start(workingDirectory: '$HOME/OSX-KVM-installer', privileged: true);
+    'export DISPLAY="`grep nameserver /etc/resolv.conf | sed \'s/nameserver //\'`:0\" >> .bashrc'
+        .start(workingDirectory: '$HOME', privileged: true);
   }
 }
