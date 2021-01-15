@@ -2,7 +2,6 @@
 
 import 'dart:io';
 import 'package:dcli/dcli.dart';
-import 'package:meta/dart2js.dart';
 import 'package:meta/meta.dart';
 
 class InstallationPreparation {
