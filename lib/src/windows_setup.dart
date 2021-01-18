@@ -2,13 +2,10 @@ import 'package:dcli/dcli.dart';
 
 class WindowsSetup {
   static bool detectWSL() {
-    var result = read('/proc/version');
-    result.forEach((line) {
-      if (line.contains('Microsoft')) {
-        echo(green('WSL DETECTED\n'));
-        return true;
-      }
-    });
+    if ('uname -a'.firstLine.contains('microsoft')) {
+      echo(green('WSL DETECTED\n'));
+      return true;
+    }
     return false;
   }
 

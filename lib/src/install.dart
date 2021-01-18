@@ -10,13 +10,6 @@ void install(List<String> args) {
   }
 
   if (WindowsSetup.detectWSL()) {
-    // echo('WSL detected make sure you have VcXsrv Windows X Server installed. \n'
-    //     'If you do not, follow this guide to do so https://techcommunity.microsoft.com/t5/windows-dev-appconsult/running-wsl-gui-apps-on-windows-10/ba-p/1493242');
-    // var installedVcXsrv = ask('If it is already installed press [y(Y)]');
-    // if (installedVcXsrv.toLowerCase() != 'y') {
-    //   echo('VcXsrv not installed, exiting');
-    //   exit(1);
-    // }
     WindowsSetup.wslX11Setup();
   }
 
