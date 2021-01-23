@@ -5,6 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "program": "dart OSX-KVM-installer/bin/osx-kvm-installer.dart",
             "name": "OSX-KVM-installer",
             "request": "launch",
             "type": "dart"
