@@ -20,6 +20,6 @@ class WindowsSetup {
 
     '.\\Downloads\\vcxsrv-64.1.20.9.0.installer.exe'
         .start(workingDirectory: '$HOME\\..\\..', privileged: true);
-    'wsl pub global activate osx_kvm_installer'.start(privileged: true);
+    'wsl pub global activate osx_kvm_installer'.start(workingDirectory: '$HOME', privileged: true);
   }
 }
