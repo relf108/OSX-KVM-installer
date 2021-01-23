@@ -10,6 +10,8 @@ class WindowsSetup {
   }
 
   static void wslX11Setup() {
+    print('$HOME');
+
     if (!exists('$HOME\\OSX-KVM-installer\\vcxsrv-64.1.20.8.1.installer.exe')) {
       fetch(
           url:
