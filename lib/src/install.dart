@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dcli/dcli.dart';
 import 'package:osx_kvm_installer/src/package_managers/package_manager.dart';
 import 'package:osx_kvm_installer/src/windows_setup.dart';
@@ -9,7 +11,7 @@ void install(List<String> args) {
     createDir('$HOME/OSX-KVM-installer');
   }
 
-  if (WindowsSetup.detectWSL()) {
+  if (Platform.isWindows) {
     // echo('WSL detected make sure you have VcXsrv Windows X Server installed. \n'
     //     'If you do not, follow this guide to do so https://techcommunity.microsoft.com/t5/windows-dev-appconsult/running-wsl-gui-apps-on-windows-10/ba-p/1493242');
     // var installedVcXsrv = ask('If it is already installed press [y(Y)]');
@@ -18,12 +20,21 @@ void install(List<String> args) {
     //   exit(1);
     // }
     WindowsSetup.wslX11Setup();
+    exit(0);
   }
 
   //if flag -s is passed in skip dep install
   var flag = '';
   if (args.isNotEmpty) {
     flag = args[0].toString();
+  }
+
+  if (WindowsSetup.detectWSL()) {
+    //This commands working directory may need to be hard coded as $HOME could pick up the windows %HOME
+    'export DISPLAY="`grep nameserver /etc/resolv.conf | sed \'s/nameserver //\'`:0\" >> .bashrc'
+        .start(workingDirectory: '$HOME', privileged: true);
+    'export DISPLAY="`grep nameserver /etc/resolv.conf | sed \'s/nameserver //\'`:0\" >> .zshrc'
+        .start(workingDirectory: '$HOME', privileged: true);
   }
   var pm = PackageManager.detectPM(flag);
   pm.installDependencies();
