@@ -1,3 +1,8 @@
+# 1.0.7
+echo export to rcs
+revert
+moved export to windows specific portion of codebase
+
 # 1.0.6
 
 # 1.0.5
