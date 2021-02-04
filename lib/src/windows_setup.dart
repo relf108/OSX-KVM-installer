@@ -20,11 +20,6 @@ class WindowsSetup {
 
     '.\\Downloads\\vcxsrv-64.1.20.9.0.installer.exe'
         .start(workingDirectory: '$HOME\\..\\..', privileged: true);
-
-    'wsl --export DISPLAY="`grep nameserver /etc/resolv.conf | sed \'s/nameserver //\'`:0\" >> .bashrc'
-        .start(workingDirectory: '$HOME', privileged: false);
-    'wsl --export DISPLAY="`grep nameserver /etc/resolv.conf | sed \'s/nameserver //\'`:0\" >> .zshrc'
-        .start(workingDirectory: '$HOME', privileged: false);
     try {
       //Older versions of dart have pub on the path directly
       'wsl dart pub global activate osx_kvm_installer'

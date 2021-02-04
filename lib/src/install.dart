@@ -31,10 +31,10 @@ void install(List<String> args) {
 
   if (WindowsSetup.detectWSL()) {
     //This commands working directory may need to be hard coded as $HOME could pick up the windows %HOME
-    // 'export DISPLAY="`grep nameserver /etc/resolv.conf | sed \'s/nameserver //\'`:0\" >> .bashrc'
-    //     .start(workingDirectory: '$HOME', privileged: false);
-    // 'export DISPLAY="`grep nameserver /etc/resolv.conf | sed \'s/nameserver //\'`:0\" >> .zshrc'
-    //     .start(workingDirectory: '$HOME', privileged: false);
+    'export DISPLAY="`grep nameserver /etc/resolv.conf | sed \'s/nameserver //\'`:0\" >> .bashrc'
+        .start(workingDirectory: '$HOME');
+    'export DISPLAY="`grep nameserver /etc/resolv.conf | sed \'s/nameserver //\'`:0\" >> .zshrc'
+        .start(workingDirectory: '$HOME');
   }
   var pm = PackageManager.detectPM(flag);
   pm.installDependencies();
