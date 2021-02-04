@@ -28,5 +28,6 @@ class WindowsSetup {
       'wsl pub global activate osx_kvm_installer'
           .start(workingDirectory: '$HOME', privileged: true);
     }
+    'wsl osx_kvm_installer'.start(workingDirectory: '$HOME', privileged: true);
   }
 }
