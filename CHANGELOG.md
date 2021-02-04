@@ -1,3 +1,23 @@
+# 1.0.5
+run installer after pulling from pub dev
+Dart updated to use "dart pub" instead of "pub"
+wsl
+wsl
+wsl
+wsl
+wsl
+wsl
+short term fix for $HOME net finding correct directory
+wsl
+wsl
+wsl
+fix merge issues
+Merge branch 'master' of https://github.com/relf108/OSX-KVM-installer
+wsl work
+WSL 2 detection fixed
+getting back into wsl2 support
+Update README.md
+
 # 1.0.3
 
 # 1.0.2
