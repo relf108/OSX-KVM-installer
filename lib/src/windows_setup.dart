@@ -20,6 +20,13 @@ class WindowsSetup {
 
     '.\\Downloads\\vcxsrv-64.1.20.9.0.installer.exe'
         .start(workingDirectory: '$HOME\\..\\..', privileged: true);
-    'wsl pub global activate osx_kvm_installer'.start(workingDirectory: '$HOME', privileged: true);
+    try {
+      //Older versions of dart have pub on the path directly
+      'wsl dart pub global activate osx_kvm_installer'
+          .start(workingDirectory: '$HOME', privileged: true);
+    } on Exception catch (_) {
+      'wsl pub global activate osx_kvm_installer'
+          .start(workingDirectory: '$HOME', privileged: true);
+    }
   }
 }
