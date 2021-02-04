@@ -1,3 +1,5 @@
+# 1.0.6
+
 # 1.0.5
 run installer after pulling from pub dev
 Dart updated to use "dart pub" instead of "pub"
