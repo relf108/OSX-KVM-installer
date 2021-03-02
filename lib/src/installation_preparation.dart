@@ -6,77 +6,116 @@ import 'package:meta/meta.dart';
 
 class InstallationPreparation {
   ///
-  static void cloneOSXKVM() {
-    if (exists('$HOME/OSX-KVM-installer/OSX-KVM')) {
-      var allowed = ask(
-          orange('OSX-KVM found, re-clone to ensure latest version?'
-              ' \n [y(Y)/n(N)]'),
-          defaultValue: 'n',
-          validator: Ask.alpha);
-      if (allowed.toLowerCase() == 'y') {
-        'rm -rf OSX-KVM-installer/OSX-KVM'
-            .start(privileged: true, workingDirectory: '$HOME');
+  static void cloneOSXKVM({String name}) async {
+    if (name == null) {
+      if (exists('$HOME/OSX-KVM-installer/OSX-KVM')) {
+        var allowed = ask(
+            orange('OSX-KVM found, re-clone to ensure latest version?'
+                ' \n [y(Y)/n(N)]'),
+            defaultValue: 'n',
+            validator: Ask.alpha);
+        if (allowed.toLowerCase() == 'y') {
+          'rm -rf OSX-KVM-installer/OSX-KVM'
+              .start(privileged: true, workingDirectory: '$HOME');
+          try {
+            'git clone https://github.com/kholia/OSX-KVM.git'
+                .start(workingDirectory: '$HOME/OSX-KVM-installer');
+          } on Exception catch (_) {
+            rethrow;
+          }
+        } else {
+          echo(green('Continuing with local version\n'));
+        }
+      } else {
         try {
           'git clone https://github.com/kholia/OSX-KVM.git'
               .start(workingDirectory: '$HOME/OSX-KVM-installer');
         } on Exception catch (_) {
           rethrow;
         }
-      } else {
-        echo(green('Continuing with local version\n'));
       }
     } else {
-      try {
-        'git clone https://github.com/kholia/OSX-KVM.git'
-            .start(workingDirectory: '$HOME/OSX-KVM-installer');
-      } on Exception catch (_) {
-        rethrow;
+      'git clone https://github.com/kholia/OSX-KVM.git'
+          .start(workingDirectory: '$HOME/OSX-KVM-installer-$name');
+      var fetcher =
+          File('$HOME/OSX-KVM-installer-$name/OSX-KVM/fetch-macOS-v2.py');
+      var lines = await fetcher.readAsLines();
+      var newContent = '';
+      for (var line in lines) {
+        if (line.toString().contains('debug = False')) {
+          newContent = '$newContent' + '    debug = True\n';
+        } else {
+          newContent = '$newContent' + '$line\n';
+        }
       }
+      fetcher.writeAsString(newContent);
     }
   }
 
   ///
-  static void fetchInstaller() {
+  static void fetchInstaller({String version, String name}) {
+    var command;
+    var directory;
+    if (version == null || name == null) {
+      command = './fetch-macOS-v2.py';
+      directory = '$HOME/OSX-KVM-installer/OSX-KVM';
+    } else {
+      command = './fetch-macOS-v2.py -os "$version" download';
+      directory = '$HOME/OSX-KVM-installer-$name/OSX-KVM';
+    }
     try {
       echo(
           orange('Heads up, the installer has not been tested with Big Sur\n'));
-      './fetch-macOS-v2.py'.start(
-          privileged: true,
-          workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM',
-          terminal: true);
+      start(command,
+          privileged: true, workingDirectory: directory, terminal: true);
     } on Exception catch (_) {
       rethrow;
     }
   }
 
   ///
-  static void convertToIMG() {
+  static void convertToIMG({String name}) {
+    var directory;
+    if (name == null) {
+      directory = '$HOME/OSX-KVM-installer/OSX-KVM';
+    } else {
+      directory = '$HOME/OSX-KVM-installer-$name/OSX-KVM';
+    }
     try {
-      'dmg2img BaseSystem.dmg BaseSystem.img'.start(
-          privileged: true,
-          workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM');
+      'dmg2img BaseSystem.dmg BaseSystem.img'
+          .start(privileged: true, workingDirectory: directory);
     } on Exception catch (_) {
       rethrow;
     }
   }
 
   ///
-  static void createHDD({@required int sizeGB}) {
+  static void createHDD({@required int sizeGB, String name}) {
+    var directory;
+    if (name == null) {
+      directory = '$HOME/OSX-KVM-installer/OSX-KVM';
+    } else {
+      directory = '$HOME/OSX-KVM-installer-$name/OSX-KVM';
+    }
     try {
-      'qemu-img create -f qcow2 mac_hdd_ng.img ${sizeGB.toString()}G'.start(
-          privileged: true,
-          workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM');
+      'qemu-img create -f qcow2 mac_hdd_ng.img ${sizeGB.toString()}G'
+          .start(privileged: true, workingDirectory: directory);
     } on Exception catch (_) {
       rethrow;
     }
   }
 
   ///
-  static Future<void> setupQuickNetworking(int retries) async {
+  static Future<void> setupQuickNetworking(int retries, {String name}) async {
+    var directory;
+    if (name == null) {
+      directory = '$HOME/OSX-KVM-installer/OSX-KVM';
+    } else {
+      directory = '$HOME/OSX-KVM-installer-$name/OSX-KVM';
+    }
     try {
-      'ip tuntap add dev tap0 mode tap'.start(
-          privileged: true,
-          workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM');
+      'ip tuntap add dev tap0 mode tap'
+          .start(privileged: true, workingDirectory: directory);
     } on Exception catch (_) {
       echo(orange('tap0 unavailable freeing resource and retrying\n'));
       'ip link delete tap0'.start(privileged: true);
@@ -89,15 +128,12 @@ class InstallationPreparation {
       }
     }
     try {
-      'ip link set tap0 up promisc on'.start(
-          privileged: true,
-          workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM');
-      'ip link set dev virbr0 up'.start(
-          privileged: true,
-          workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM');
-      'ip link set dev tap0 master virbr0'.start(
-          privileged: true,
-          workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM');
+      'ip link set tap0 up promisc on'
+          .start(privileged: true, workingDirectory: directory);
+      'ip link set dev virbr0 up'
+          .start(privileged: true, workingDirectory: directory);
+      'ip link set dev tap0 master virbr0'
+          .start(privileged: true, workingDirectory: directory);
     } on Exception catch (_) {
       try {
         'virsh net-start default'.start(privileged: true);
@@ -105,12 +141,10 @@ class InstallationPreparation {
         try {
           echo(orange("default network not found, creating default\n"));
 
-          'systemctl enable libvirtd'.start(
-              privileged: true,
-              workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM');
-          'systemctl start libvirtd'.start(
-              privileged: true,
-              workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM');
+          'systemctl enable libvirtd'
+              .start(privileged: true, workingDirectory: directory);
+          'systemctl start libvirtd'
+              .start(privileged: true, workingDirectory: directory);
 
           var defaultXml =
               await new File('$HOME/OSX-KVM-installer/OSX-KVM/default.xml')
@@ -132,9 +166,8 @@ class InstallationPreparation {
           stream.write('</network>\n');
           stream.close();
 
-          'virsh net-define --file default.xml'.start(
-              privileged: true,
-              workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM');
+          'virsh net-define --file default.xml'
+              .start(privileged: true, workingDirectory: directory);
           //'virsh net-start default'.start(privileged: true);
         } on Exception catch (_) {
           if (retries < 10) {
@@ -158,37 +191,47 @@ class InstallationPreparation {
   }
 
   ///
-  static void libVirtManager() {
-    r'sed -i "s/CHANGEME/$USER/g" macOS-libvirt-Catalina.xml'.start(
-        privileged: true, workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM');
+  static void libVirtManager({String name}) {
+    var directory;
+    if (name == null) {
+      directory = '$HOME/OSX-KVM-installer/OSX-KVM';
+    } else {
+      directory = '$HOME/OSX-KVM-installer-$name/OSX-KVM';
+    }
+    r'sed -i "s/CHANGEME/$USER/g" macOS-libvirt-Catalina.xml'
+        .start(privileged: true, workingDirectory: directory);
     'virt-xml-validate macOS-libvirt-Catalina.xml'
-        .start(workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM');
+        .start(workingDirectory: directory);
     'virsh --connect qemu:///system define macOS-libvirt-Catalina.xml'
-        .start(workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM');
+        .start(workingDirectory: directory);
   }
 
   ///
-  static void setupEXE() {
-    if (!exists('$HOME/OSX-KVM-installer/OSX-KVM-runner')) {
+  static void setupEXE({String name}) {
+    var directory;
+    if (name == null) {
+      directory = '$HOME/OSX-KVM-installer/OSX-KVM-runner';
+    } else {
+      directory = '$HOME/OSX-KVM-installer-$name/OSX-KVM-runner';
+    }
+    if (!exists(directory)) {
       createDir('$HOME/OSX-KVM-installer/OSX-KVM-runner');
     } else {
       'rm -rf OSX-KVM-runner'
           .start(workingDirectory: '$HOME/OSX-KVM-installer');
-      createDir('$HOME/OSX-KVM-installer/OSX-KVM-runner');
+      createDir(directory);
     }
     fetch(
         url:
             'https://github.com/relf108/OSX-KVM-runner/releases/download/beta-2/OSX-KVM-runner',
-        saveToPath: '$HOME/OSX-KVM-installer/OSX-KVM-runner/osx_kvm_runner');
+        saveToPath: '$directory/osx_kvm_runner');
 
-    'chmod +x osx_kvm_runner'
-        .start(workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM-runner');
+    'chmod +x osx_kvm_runner'.start(workingDirectory: directory);
     if (Shell.current.matchByName(BashShell.shellName)) {
-      '.bashrc'
-          .append(r'PATH="$PATH":"$HOME/OSX-KVM-installer/OSX-KVM-runner"');
+      '.bashrc'.append('PATH="\$PATH":"$directory"');
     }
     if (Shell.current.matchByName(ZshShell.shellName)) {
-      '.zshrc'.append(r'PATH="$PATH":"$HOME/OSX-KVM-installer/OSX-KVM-runner"');
+      '.zshrc'.append('PATH="\$PATH":"$directory"');
     }
   }
 }
