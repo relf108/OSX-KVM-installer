@@ -39,18 +39,7 @@ class InstallationPreparation {
           .start(workingDirectory: '$HOME/OSX-KVM-installer-$name');
       var fetcher =
           File('$HOME/OSX-KVM-installer-$name/OSX-KVM/fetch-macOS-v2.py');
-      var lines = await fetcher.readAsLines();
-      var debugLine;
-      for (int i = 0; i < lines.length; i++) {
-        if (lines[i].toString().contains('debug = False')) {
-          debugLine = i;
-        }
-      }
-      lines[debugLine] = '    debug = True\n';
-      for (var line in lines){
-      fetcher.writeAsString(line);
-
-      }
+      await editFetcher(fetcher);
       // var newContent = '';
       // for (var line in lines) {
       //   if (line.toString().contains('debug = False')) {
@@ -60,6 +49,20 @@ class InstallationPreparation {
       //   }
       // }
       // fetcher.writeAsString(newContent);
+    }
+  }
+
+  static Future editFetcher(File fetcher) async {
+     var lines = await fetcher.readAsLines();
+    var debugLine;
+    for (int i = 0; i < lines.length; i++) {
+      if (lines[i].toString().contains('debug = False')) {
+        debugLine = i;
+      }
+    }
+    lines[debugLine] = '    debug = True\n';
+    for (var line in lines) {
+      fetcher.writeAsString(line, mode: FileMode.append);
     }
   }
 

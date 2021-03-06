@@ -2,14 +2,15 @@ name: osx_kvm_installer
 version: 1.0.7
 homepage: https://github.com/relf108/OSX-KVM-installer
 description: A cli based application which automates the installation and installation preperation steps required for the OSX-KVM project.
-environment: 
-  sdk: '>=2.6.0 <3.0.0'
-dependencies: 
+environment:
+  sdk: ">=2.6.0 <3.0.0"
+dependencies:
   args: ^1.0.0
   dcli: ^0.24.0
   path: ^1.0.0
   meta: ^1.2.2
-dev_dependencies: 
+dev_dependencies:
+  test: ^1.16.5
   pedantic: ^1.0.0
-executables: 
-  osx_kvm_installer: 
+executables:
+  osx_kvm_installer:
