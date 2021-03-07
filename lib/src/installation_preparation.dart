@@ -39,21 +39,12 @@ class InstallationPreparation {
           .start(workingDirectory: '$HOME/OSX-KVM-installer-$name');
       var fetcher =
           File('$HOME/OSX-KVM-installer-$name/OSX-KVM/fetch-macOS-v2.py');
-      await editFetcher(fetcher);
-      // var newContent = '';
-      // for (var line in lines) {
-      //   if (line.toString().contains('debug = False')) {
-      //     newContent = '$newContent' + '    debug = True\n';
-      //   } else {
-      //     newContent = '$newContent' + '$line\n';
-      //   }
-      // }
-      // fetcher.writeAsString(newContent);
+      //await editFetcher(fetcher);
     }
   }
 
   static Future editFetcher(File fetcher) async {
-     var lines = await fetcher.readAsLines();
+    var lines = await fetcher.readAsLines();
     var debugLine;
     for (int i = 0; i < lines.length; i++) {
       if (lines[i].toString().contains('debug = False')) {
@@ -74,7 +65,7 @@ class InstallationPreparation {
       command = './fetch-macOS-v2.py';
       directory = '$HOME/OSX-KVM-installer/OSX-KVM';
     } else {
-      command = './fetch-macOS-v2.py -os "$version" download';
+      command = './fetch-macOS-v2.py --action download -os "$version"';
       directory = '$HOME/OSX-KVM-installer-$name/OSX-KVM';
     }
     try {
