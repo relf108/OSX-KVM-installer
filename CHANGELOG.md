@@ -1,3 +1,9 @@
+# 1.0.8
+testing through gui
+new fetch edit method functioning as expected.
+to be tested new fetcher editing strat
+began work on support for gui client
+
 # 1.0.7
 echo export to rcs
 revert
