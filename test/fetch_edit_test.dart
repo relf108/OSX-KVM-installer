@@ -11,4 +11,8 @@ void main() {
         File('$HOME/OSX-KVM-installer-$name/OSX-KVM/fetch-macOS-v2.py');
     InstallationPreparation.editFetcher(fetcher);
   });
+
+  test('setup quick networking', () {
+    InstallationPreparation.setupQuickNetworking(0, name: 'test');
+  });
 }

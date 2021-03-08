@@ -72,22 +72,23 @@ void install(List<String> args) {
   echo(orange(
       'STARTING OSX. DO NOT TURN OFF THE VM OR CLOSE THIS TERMINAL UNTIL INSTALL IS FINISHED \n'
       'GO TO https://github.com/relf108/OSX-KVM-installer#post-installation FOR GRAPHICAL INSTALL STEPS\n'));
-  if (flag != '-g') {
-    './OpenCore-Boot.sh'.start(
-        privileged: true, workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM');
-  } else {
+  echo(green(flag));
+  if (flag == '-g') {
     echo('starting open core boot in $HOME/OSX-KVM-installer-$name/OSX-KVM');
     './OpenCore-Boot.sh'.start(
         privileged: true,
         workingDirectory: '$HOME/OSX-KVM-installer-$name/OSX-KVM');
+  } else {
+    './OpenCore-Boot.sh'.start(
+        privileged: true, workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM');
   }
-  try {
-    InstallationPreparation.libVirtManager(name: name);
-    echo(green('OSX added to virt manager\n'));
-  } on Exception catch (_) {
-    echo(orange(
-        'Failed to add vm to virt manager, not to worry it can still be run with the OSX-KVM-runner\n'));
-  }
+  // try {
+  //   InstallationPreparation.libVirtManager(name: name);
+  //   echo(green('OSX added to virt manager\n'));
+  // } on Exception catch (_) {
+  //   echo(orange(
+  //       'Failed to add vm to virt manager, not to worry it can still be run with the OSX-KVM-runner\n'));
+  // }
   InstallationPreparation.setupEXE(name: name);
   echo(green(
       'Setup complete. \n If you like this software please consider staring this project or donating'));

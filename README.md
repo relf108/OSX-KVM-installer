@@ -7,9 +7,7 @@ chmod +x osx_kvm_installer
 Thats it, you've just run the installer, now go to post installation for more info on setting up your install.
 
 # Building 
-An automation of the cli based installation steps for the kholia / OSX-KVM project. This installer just calls each of the cli commands listed on the installation guide. All the credit for the software making this possible goes to kholia. <br>
-All credit for dcli goes to bsutton.
-
+An automation of the cli based installation process for the kholia / OSX-KVM project.
 # Running the script form source
 In order to run this you will need to have dcli installed. Do so with these commands.  <br>
 wget https://github.com/bsutton/dcli/releases/download/latest-linux/dcli_install <br>

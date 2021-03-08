@@ -119,13 +119,18 @@ class InstallationPreparation {
       directory = '$HOME/OSX-KVM-installer-$name/OSX-KVM';
     }
     try {
+      print(directory);
       'ip tuntap add dev tap0 mode tap'
           .start(privileged: true, workingDirectory: directory);
     } on Exception catch (_) {
       echo(orange('tap0 unavailable freeing resource and retrying\n'));
       'ip link delete tap0'.start(privileged: true);
       if (retries < 10) {
-        setupQuickNetworking(retries + 1);
+        if (name == null) {
+          setupQuickNetworking(retries + 1);
+        } else {
+          setupQuickNetworking(retries + 1, name: name);
+        }
       } else {
         echo(red(
             'FATAL: Unable to setup networking after retry. There might be some issue other than unavailable resources\n'));
@@ -152,8 +157,7 @@ class InstallationPreparation {
               .start(privileged: true, workingDirectory: directory);
 
           var defaultXml =
-              await new File('$HOME/OSX-KVM-installer/OSX-KVM/default.xml')
-                  .create(recursive: false);
+              await new File('$directory/default.xml').create(recursive: false);
           var stream = defaultXml.openWrite();
           stream.write('<network>\n');
           stream.write('  <name>default</name>\n');
@@ -176,7 +180,11 @@ class InstallationPreparation {
           //'virsh net-start default'.start(privileged: true);
         } on Exception catch (_) {
           if (retries < 10) {
-            setupQuickNetworking(retries + 1);
+            if (name == null) {
+              setupQuickNetworking(retries + 1);
+            } else {
+              setupQuickNetworking(retries + 1, name: name);
+            }
           } else {
             echo(red(
                 'FATAL: Unable to setup networking after retry. There might be some issue other than unavailable resources\n'));
@@ -186,7 +194,11 @@ class InstallationPreparation {
       }
 
       if (retries < 10) {
-        setupQuickNetworking(retries + 1);
+        if (name == null) {
+          setupQuickNetworking(retries + 1);
+        } else {
+          setupQuickNetworking(retries + 1, name: name);
+        }
       } else {
         echo(red(
             'FATAL: Unable to setup networking after retry. There might be some issue other than unavailable resources\n'));
@@ -220,7 +232,7 @@ class InstallationPreparation {
       directory = '$HOME/OSX-KVM-installer-$name/OSX-KVM-runner';
     }
     if (!exists(directory)) {
-      createDir('$HOME/OSX-KVM-installer/OSX-KVM-runner');
+      createDir('$directory');
     } else {
       'rm -rf OSX-KVM-runner'
           .start(workingDirectory: '$HOME/OSX-KVM-installer');
