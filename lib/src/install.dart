@@ -49,8 +49,6 @@ void install(List<String> args) {
         .start(workingDirectory: '$HOME');
   }
 
-  if (flag == '-g') {}
-
   var pm = PackageManager.detectPM(flag);
   pm.installDependencies();
   echo(green('Dependencies installed\n'));
@@ -74,13 +72,14 @@ void install(List<String> args) {
   echo(orange(
       'STARTING OSX. DO NOT TURN OFF THE VM OR CLOSE THIS TERMINAL UNTIL INSTALL IS FINISHED \n'
       'GO TO https://github.com/relf108/OSX-KVM-installer#post-installation FOR GRAPHICAL INSTALL STEPS\n'));
-  if (name == null) {
+  if (flag != '-g') {
     './OpenCore-Boot.sh'.start(
         privileged: true, workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM');
-  }
-  else{
+  } else {
+    echo('starting open core boot in $HOME/OSX-KVM-installer-$name/OSX-KVM');
     './OpenCore-Boot.sh'.start(
-        privileged: true, workingDirectory: '$HOME/OSX-KVM-installer-$name/OSX-KVM');
+        privileged: true,
+        workingDirectory: '$HOME/OSX-KVM-installer-$name/OSX-KVM');
   }
   try {
     InstallationPreparation.libVirtManager(name: name);
