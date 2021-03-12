@@ -30,13 +30,6 @@ void install(List<String> args) {
   }
 
   if (Platform.isWindows) {
-    // echo('WSL detected make sure you have VcXsrv Windows X Server installed. \n'
-    //     'If you do not, follow this guide to do so https://techcommunity.microsoft.com/t5/windows-dev-appconsult/running-wsl-gui-apps-on-windows-10/ba-p/1493242');
-    // var installedVcXsrv = ask('If it is already installed press [y(Y)]');
-    // if (installedVcXsrv.toLowerCase() != 'y') {
-    //   echo('VcXsrv not installed, exiting');
-    //   exit(1);
-    // }
     WindowsSetup.wslX11Setup();
     exit(0);
   }
@@ -48,14 +41,17 @@ void install(List<String> args) {
     'echo \'export DISPLAY="`grep nameserver /etc/resolv.conf | sed \'s/nameserver //\'`:0\"\' >> .zshrc'
         .start(workingDirectory: '$HOME');
   }
-
+  ///Install dependencies
   var pm = PackageManager.detectPM(flag);
   pm.installDependencies();
   echo(green('Dependencies installed\n'));
+
+  ///Setup osx image
   InstallationPreparation.cloneOSXKVM(name: name);
   InstallationPreparation.fetchInstaller(version: version, name: name);
   InstallationPreparation.convertToIMG(name: name);
-  //var size;
+
+  ///Create virtual hdd
   if (flag != '-g') {
     size = ask('Enter size of install in GB (default 64)',
         defaultValue: '64', validator: Ask.integer);
@@ -64,11 +60,14 @@ void install(List<String> args) {
           ask('Enter size of install in GB (default 64)', defaultValue: '64');
     }
   }
-
   InstallationPreparation.createHDD(sizeGB: int.tryParse(size), name: name);
   echo(green('Virtual hard drive setup\n'));
+
+  ///Setup high speed networking using tap
   InstallationPreparation.setupQuickNetworking(0, name: name);
   echo(green('Networking setup complete\n'));
+
+  ///Start vm to run install wizard
   echo(orange(
       'STARTING OSX. DO NOT TURN OFF THE VM OR CLOSE THIS TERMINAL UNTIL INSTALL IS FINISHED \n'
       'GO TO https://github.com/relf108/OSX-KVM-installer#post-installation FOR GRAPHICAL INSTALL STEPS\n'));
@@ -82,13 +81,8 @@ void install(List<String> args) {
     './OpenCore-Boot.sh'.start(
         privileged: true, workingDirectory: '$HOME/OSX-KVM-installer/OSX-KVM');
   }
-  // try {
-  //   InstallationPreparation.libVirtManager(name: name);
-  //   echo(green('OSX added to virt manager\n'));
-  // } on Exception catch (_) {
-  //   echo(orange(
-  //       'Failed to add vm to virt manager, not to worry it can still be run with the OSX-KVM-runner\n'));
-  // }
+
+  ///Install runner
   InstallationPreparation.setupEXE(name: name);
   echo(green(
       'Setup complete. \n If you like this software please consider staring this project or donating'));
