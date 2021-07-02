@@ -245,10 +245,10 @@ class InstallationPreparation {
 
     'chmod +x osx_kvm_runner'.start(workingDirectory: directory);
     if (Shell.current.matchByName(BashShell.shellName)) {
-      '.bashrc'.append('PATH="\$PATH":"$directory"');
+      '$HOME/.bashrc'.append('PATH="\$PATH":"$directory"');
     }
     if (Shell.current.matchByName(ZshShell.shellName)) {
-      '.zshrc'.append('PATH="\$PATH":"$directory"');
+      '$HOME/.zshrc'.append('PATH="\$PATH":"$directory"');
     }
   }
 }
